@@ -6,26 +6,26 @@ export class Embed extends MessageEmbed {
   preset(bot: Bot, type: EmbedPreset, text: string): Embed {
     switch (type) {
       case EmbedPreset.DEFAULT:
-        this.setColor(bot.Colors.main).setDescription(`${text}`);
+        this.setColor(bot.Colors.main ?? 'BLURPLE').setDescription(`${text}`);
         break;
       case EmbedPreset.SUCCESS:
-        this.setColor(bot.Colors.success).setDescription(
-          `${bot.Emojis.success} | ${text}`
+        this.setColor(bot.Colors.success ?? 'GREEN').setDescription(
+          `${bot.Emojis.success ?? '✅'} | ${text}`
         );
         break;
       case EmbedPreset.ERROR:
-        this.setColor(bot.Colors.error).setDescription(
-          `${bot.Emojis.error} | ${text}`
+        this.setColor(bot.Colors.error ?? 'RED').setDescription(
+          `${bot.Emojis.error ?? '❌'} | ${text}`
         );
         break;
       case EmbedPreset.LOADING:
-        this.setColor(bot.Colors.loading).setDescription(
-          `${bot.Emojis.loading} | ${text}`
+        this.setColor(bot.Colors.loading ?? 'YELLOW').setDescription(
+          `${bot.Emojis.loading ?? '⏳'} | ${text}`
         );
         break;
       case EmbedPreset.WARN:
-        this.setColor(bot.Colors.warn).setDescription(
-          `${bot.Emojis.warn} | ${text}`
+        this.setColor(bot.Colors.warn ?? 'ORANGE').setDescription(
+          `${bot.Emojis.warn ?? '⚠️'} | ${text}`
         );
         break;
       default:
