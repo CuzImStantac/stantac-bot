@@ -1,7 +1,8 @@
-import { Database } from '.';
+import { Bot, Database } from '.';
 import { DatabaseType, JsonDatabaseOptions } from '../types';
 import * as path from 'path';
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import chalk from 'chalk';
 
 export class JsonDatabase extends Database {
   readonly path: string;
@@ -12,11 +13,19 @@ export class JsonDatabase extends Database {
 
     const { dirPath } = options;
 
-    this.path = path.join(__dirname, '..', dirPath);
+    this.path = path.join(__dirname, '..', '..', dirPath);
 
     this.read();
   }
 
+  log(bot: Bot): void {
+    bot.logger.debug(`Using ${chalk.magentaBright} as DatabasePath!`);
+    bot.logger.debug(
+      `Loaded ${chalk.yellowBright(Object.keys(this.cache).length)} File${
+        Object.keys(this.cache).length === 1 ? '' : 's'
+      }.`
+    );
+  }
   write(): boolean {
     for (let [dataPath, data] of Object.entries(this.cache)) {
       const filePath = path.join(this.path, `${dataPath}.json`);

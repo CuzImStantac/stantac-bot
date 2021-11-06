@@ -195,6 +195,8 @@ export class Bot {
       )} as Database.`
     );
 
+    if (this.database instanceof JsonDatabase) this.database.log(this);
+
     this.Colors = colors;
     this.Emojis = emojis;
     this.Config = config;
