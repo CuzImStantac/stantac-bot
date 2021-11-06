@@ -187,6 +187,10 @@ export class Bot {
       `Client ${chalk.cyan('BOT-')}${chalk.cyanBright(this.id)} created!`
     );
 
+    this.Config = config;
+    this.Colors = colors;
+    this.Emojis = emojis;
+
     if (!database) throw new Error('No database provided!');
     this.database = database;
     this.logger.info(
@@ -196,10 +200,6 @@ export class Bot {
     );
 
     if (this.database instanceof JsonDatabase) this.database.log(this);
-
-    this.Colors = colors;
-    this.Emojis = emojis;
-    this.Config = config;
 
     this.client = new Client(this, {
       intents: [Intents.FLAGS.GUILDS],

@@ -19,7 +19,9 @@ export class JsonDatabase extends Database {
   }
 
   log(bot: Bot): void {
-    bot.logger.debug(`Using ${chalk.magentaBright} as DatabasePath!`);
+    bot.logger.debug(
+      `Using ${chalk.magentaBright(this.path)} as DatabasePath!`
+    );
     bot.logger.debug(
       `Loaded ${chalk.yellowBright(Object.keys(this.cache).length)} File${
         Object.keys(this.cache).length === 1 ? '' : 's'
