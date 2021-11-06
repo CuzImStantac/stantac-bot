@@ -48,12 +48,17 @@ export class Client extends DClient {
     );
     return new Promise(async (res) => {
       this.bot.logger.debug(
-        `Fetching old ${chalk.yellowBright('ApplicationCommands')}...`
+        `Fetching global ${chalk.yellowBright('ApplicationCommands')}...`
       );
       const commands = await this.application?.commands.fetch();
-      if (commands) {
+      this.bot.logger.debug(
+        `Fetched ${chalk.blueBright(
+          commands?.size ?? 0
+        )} global ${chalk.yellowBright('ApplicationCommands')}`
+      );
+      if (commands?.size) {
         this.bot.logger.debug(
-          `Cleaning old ${chalk.yellowBright('ApplicationCommands')}...`
+          `Cleaning old global ${chalk.yellowBright('ApplicationCommands')}...`
         );
         for (const command of commands.values()) {
           if (
@@ -78,6 +83,9 @@ export class Client extends DClient {
             }
           }
         }
+        this.bot.logger.debug(
+          `Global ${chalk.yellowBright('ApplicationCommand')} cleaning done.`
+        );
       }
 
       for (const [commandName, command] of this.bot.Commands) {
