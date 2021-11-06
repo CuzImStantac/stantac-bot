@@ -8,3 +8,4 @@ export * from './SqlDatabase';
 export * from './Logger';
 export * from './Tool';
 export * from './Utils';
+export * from './Embed';

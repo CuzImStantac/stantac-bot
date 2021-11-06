@@ -22,6 +22,14 @@ export interface DatabaseOptions {
   type: DatabaseType;
 }
 
+export enum EmbedPreset {
+  'DEFAULT' = 0,
+  'SUCCESS',
+  'WARN',
+  'ERROR',
+  'LOADING',
+}
+
 export interface BotOptions {
   commandsPath?: string;
   eventsPath?: string;
