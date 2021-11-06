@@ -1,0 +1,26 @@
+{
+  "name": "stantac-bots",
+  "version": "1.0.0",
+  "description": "Simple tool to create bots for discord using JavaScript/TypeScript",
+  "main": "boot.js",
+  "scripts": {
+    "start": "node build\\boot.js",
+    "test": "nodemon build\\boot.js --debug",
+    "init": "npm i && tsc"
+  },
+  "keywords": [],
+  "author": "CuzImStantac",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "@types/mysql": "^2.15.19",
+    "@types/node": "^16.10.3",
+    "nodemon": "^2.0.13",
+    "typescript": "^4.4.4"
+  }
+}
