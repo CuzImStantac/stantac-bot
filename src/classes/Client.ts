@@ -9,9 +9,9 @@ import {
   Interaction,
   MessageActionRow,
   MessageButton,
-  MessageEmbed,
 } from 'discord.js';
-import { Bot, Command } from '.';
+import { Bot, Command, Embed } from '.';
+import { EmbedPreset } from '../types';
 
 export class Client extends DClient {
   readonly bot: Bot;
@@ -204,40 +204,23 @@ export class Client extends DClient {
             await command.delete();
             await interaction.update({
               embeds: [
-                new MessageEmbed()
-                  .setColor(this.bot.Colors.success || 'GREEN')
-                  .setDescription(
-                    `${
-                      this.bot.Emojis.success || '✅'
-                    } | Deleted the  Command [\`${command.name}\`] successfuly!`
-                  ),
+                new Embed().preset(
+                  this.bot,
+                  EmbedPreset.SUCCESS,
+                  `Deleted the  Command [\`${command.name}\`] successfuly!`
+                ),
               ],
               components: [],
             });
-          } else {
-            await interaction.update({
-              embeds: [
-                new MessageEmbed()
-                  .setColor(this.bot.Colors.error || 'RED')
-                  .setDescription(
-                    `${
-                      this.bot.Emojis.error || '❌'
-                    } | Could not fetch a ApplicationCommand!`
-                  ),
-              ],
-              components: [],
-            });
-          }
+          } else throw new Error('Could not fetch a ApplicationCommand!');
         } catch (e) {
           await interaction.update({
             embeds: [
-              new MessageEmbed()
-                .setColor(this.bot.Colors.error || 'RED')
-                .setDescription(
-                  `${
-                    this.bot.Emojis.error || '❌'
-                  } | Unable to delete the command! Error: ${e}`
-                ),
+              new Embed().preset(
+                this.bot,
+                EmbedPreset.ERROR,
+                'Could not fetch a ApplicationCommand!'
+              ),
             ],
             components: [],
           });
@@ -252,30 +235,20 @@ export class Client extends DClient {
         (c) => c.name.toLowerCase() === interaction.commandName
       );
       if (!command) {
+        const errorReply = {
+          embeds: [
+            new Embed().preset(
+              this.bot,
+              EmbedPreset.ERROR,
+              'This command does not exist!'
+            ),
+          ],
+          ephemeral: true,
+        };
         if (!this.bot.Config.owners.includes(interaction.user.id)) {
-          await interaction.reply({
-            embeds: [
-              new MessageEmbed()
-                .setColor(this.bot.Colors.error || 'RED')
-                .setDescription(
-                  `${
-                    this.bot.Emojis.error || '❌'
-                  } | This command does not exist!`
-                ),
-            ],
-            ephemeral: true,
-          });
+          await interaction.reply(errorReply);
         } else {
-          await interaction.reply({
-            embeds: [
-              new MessageEmbed()
-                .setColor(this.bot.Colors.error || 'RED')
-                .setDescription(
-                  `${
-                    this.bot.Emojis.error || '❌'
-                  } | This command does not exist!`
-                ),
-            ],
+          Object.assign(errorReply, {
             components: [
               new MessageActionRow().addComponents(
                 new MessageButton()
@@ -285,8 +258,9 @@ export class Client extends DClient {
                   .setCustomId(`delete-${interaction.commandId}`)
               ),
             ],
-            ephemeral: true,
           });
+
+          await interaction.reply(errorReply);
         }
         return res();
       }
@@ -297,13 +271,11 @@ export class Client extends DClient {
       ) {
         await interaction.reply({
           embeds: [
-            new MessageEmbed()
-              .setColor(this.bot.Colors.error || 'RED')
-              .setDescription(
-                `${
-                  this.bot.Emojis.error || '❌'
-                } | This command should not exist here!`
-              ),
+            new Embed().preset(
+              this.bot,
+              EmbedPreset.ERROR,
+              'This command is not allowed in this guild!'
+            ),
           ],
           ephemeral: true,
         });
@@ -335,13 +307,11 @@ export class Client extends DClient {
       } catch (e: Error | any) {
         await interaction.reply({
           embeds: [
-            new MessageEmbed()
-              .setColor(this.bot.Colors.error || 'RED')
-              .setDescription(
-                `${
-                  this.bot.Emojis.error || '❌'
-                } | There was an error during the command execution!`
-              ),
+            new Embed().preset(
+              this.bot,
+              EmbedPreset.ERROR,
+              'There was an error during the command execution!'
+            ),
           ],
           ephemeral: true,
         });
