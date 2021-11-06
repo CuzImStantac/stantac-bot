@@ -2,11 +2,11 @@ import { Bot, JsonDatabase /* SqlDatabase */ } from './classes';
 import { config } from 'dotenv';
 config();
 
-const db = new JsonDatabase({ dirPath: '../data' });
+const db = new JsonDatabase({ dirPath: 'data' });
 
 new Bot({
-  commandsPath: './commands',
-  eventsPath: './events',
+  commandsPath: 'build/commands',
+  eventsPath: 'build/events',
   config: {
     token: process.env['TOKEN'] || '',
     owners: ['467414935530504192'],
