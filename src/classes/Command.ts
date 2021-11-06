@@ -6,7 +6,7 @@ export abstract class Command {
   static description?: string;
   static guild?: string[] | string;
   static options?: CommandOptions[];
-  static defaultPermissions: boolean;
+  static defaultPermissions?: boolean;
 
   static getGuilds(): string[] {
     return this.guild
@@ -22,7 +22,7 @@ export abstract class Command {
       description: this.description || 'No description provided.',
       type: 'CHAT_INPUT',
       options: this.options ?? [],
-      defaultPermission: this.defaultPermissions,
+      defaultPermission: this.defaultPermissions ?? true,
     };
   }
   static execute(client: Client, interaction: CommandInteraction) {
