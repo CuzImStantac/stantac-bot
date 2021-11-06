@@ -52,9 +52,12 @@ export class Bot {
     if (!keepOld) this.Commands.clear();
 
     return new Promise(async (resolve) => {
-      for (const file of readdirSync(path.join(__dirname, '..', filePath), {
-        withFileTypes: true,
-      })) {
+      for (const file of readdirSync(
+        path.join(__dirname, '..', '..', filePath),
+        {
+          withFileTypes: true,
+        }
+      )) {
         if (file.isDirectory()) {
           const { success, error } = await this.setCommands(
             path.join(filePath, file.name),
@@ -67,7 +70,7 @@ export class Bot {
           if (!file.name.endsWith('.js')) continue;
 
           const command: typeof Command = (
-            await import(path.join(__dirname, '..', filePath, file.name))
+            await import(path.join(__dirname, '..', '..', filePath, file.name))
           )?.default;
 
           if (!command) {
@@ -108,9 +111,12 @@ export class Bot {
     if (!keepOld) this.Events.clear();
 
     return new Promise(async (resolve) => {
-      for (const file of readdirSync(path.join(__dirname, '..', filePath), {
-        withFileTypes: true,
-      })) {
+      for (const file of readdirSync(
+        path.join(__dirname, '..', '..', filePath),
+        {
+          withFileTypes: true,
+        }
+      )) {
         if (file.isDirectory()) {
           const { success, error } = await this.setEvents(
             path.join(filePath, file.name),
@@ -122,7 +128,7 @@ export class Bot {
         } else {
           if (!file.name.endsWith('.js')) continue;
           const event: typeof Event = (
-            await import(path.join(__dirname, '..', filePath, file.name))
+            await import(path.join(__dirname, '..', '..', filePath, file.name))
           )?.default;
 
           if (!event) {
@@ -181,6 +187,7 @@ export class Bot {
       `Client ${chalk.cyan('BOT-')}${chalk.cyanBright(this.id)} created!`
     );
 
+    if (!database) throw new Error('No database provided!');
     this.database = database;
     this.logger.info(
       `Selected ${chalk.magentaBright(
@@ -204,6 +211,8 @@ export class Bot {
           )}. ${chalk.redBright(error)} invalid!`
         );
       });
+    } else {
+      this.logger.info(`${chalk.yellowBright('Command')} path unset!`);
     }
 
     if (eventsPath) {
@@ -215,6 +224,8 @@ export class Bot {
           )}. ${chalk.redBright(error)} invalid!`
         );
       });
+    } else {
+      this.logger.info(`${chalk.yellowBright('Event')} path unset!`);
     }
 
     this.client.login(this.Config.token);
