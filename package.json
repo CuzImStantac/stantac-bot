@@ -4,22 +4,26 @@
   "description": "Simple tool to create bots for discord using JavaScript/TypeScript",
   "main": "boot.js",
   "scripts": {
-    "start": "node build\\boot.js",
-    "test": "nodemon build\\boot.js --debug",
+    "start": "node build\\developing.js",
     "init": "npm i && tsc"
   },
-  "keywords": [],
+  "keywords": [
+    "discord",
+    "bot",
+    "javascript",
+    "typescript"
+  ],
   "author": "CuzImStantac",
   "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.2",
     "discord.js": "^13.3.1",
-    "dotenv": "^10.0.0",
     "mysql": "^2.18.1"
   },
   "devDependencies": {
     "@types/mysql": "^2.15.19",
     "@types/node": "^16.11.12",
+    "dotenv": "^10.0.0",
     "nodemon": "^2.0.15",
     "typescript": "^4.5.2"
   }
