@@ -1,6 +1,7 @@
 export {
   Bot,
   Command,
+  Button,
   Event,
   SqlDatabase,
   JsonDatabase,
