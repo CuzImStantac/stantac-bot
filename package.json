@@ -2,7 +2,8 @@
   "name": "stantac-bots",
   "version": "1.0.0",
   "description": "Simple tool to create bots for discord using JavaScript/TypeScript",
-  "main": "boot.js",
+  "main": "build/index.js",
+  "types": "build",
   "scripts": {
     "start": "node build\\developing.js",
     "init": "npm i && tsc"
