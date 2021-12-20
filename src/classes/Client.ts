@@ -1,24 +1,23 @@
 import chalk from 'chalk';
 import {
-  ApplicationCommand,
   ButtonInteraction,
   Client as DClient,
   ClientOptions,
   CommandInteraction,
   Guild,
   Interaction,
-  MessageActionRow,
-  MessageButton,
 } from 'discord.js';
-import { Bot, Command, Embed } from '.';
+import { Bot, Command, Embed, ActivityManager } from '.';
 import { EmbedPreset } from '../types';
 
 export class Client extends DClient {
   readonly bot: Bot;
+  readonly activityManager: ActivityManager;
 
   constructor(bot: Bot, options: ClientOptions) {
     super(options);
     this.bot = bot;
+    this.activityManager = new ActivityManager();
 
     this.on('newListener', (event: string) => {
       this.bot.logger.debug(
@@ -76,10 +75,11 @@ export class Client extends DClient {
               this.bot.logger.debug(
                 `Deleted ${chalk.blueBright(command.name)}!`
               );
-            } catch (e) {
+            } catch (e: Error | any) {
               this.bot.logger.error(
                 `Unable to delete ${chalk.redBright(command.name)}!`
               );
+              this.bot.logger.debug(e.message);
             }
           }
         }
@@ -127,12 +127,13 @@ export class Client extends DClient {
                     guildId
                   )}.`
                 );
-              } catch (e) {
+              } catch (e: Error | any) {
                 this.bot.logger.error(
                   `Unable to create ${chalk.blueBright(
                     commandName
                   )} on ${chalk.magenta(guildId)}!`
                 );
+                this.bot.logger.debug(e.message);
               }
             } else {
               if (!guildInteraction.equals(command.data(), true)) {
@@ -167,10 +168,11 @@ export class Client extends DClient {
               this.bot.logger.debug(
                 `Created ${chalk.blueBright(commandName)} globally.`
               );
-            } catch (e) {
+            } catch (e: Error | any) {
               this.bot.logger.error(
                 `Unable to create ${chalk.blueBright(commandName)} globally!`
               );
+              this.bot.logger.debug(e.message);
             }
           } else {
             if (!globalInteraction.equals(command.data(), true)) {
@@ -194,49 +196,58 @@ export class Client extends DClient {
 
   handleButton(interaction: ButtonInteraction): Promise<void> {
     return new Promise(async (res) => {
-      if (interaction.customId.startsWith('delete-')) {
-        const commandId = interaction.customId.split('-').slice(1).join('-');
-        let command;
-        //Todo: Fix this code and make it more compakt
-        try {
-          command = await this.application?.commands.fetch(commandId);
-        } catch (e) {}
+      if (interaction.customId) {
+        let button = this.bot.Buttons.find(
+          (b) => b.id === interaction.customId
+        );
 
-        if (!command) {
-          try {
-            command = await interaction.guild?.commands.fetch(commandId);
-          } catch (e) {}
-        }
         try {
-          if (command instanceof ApplicationCommand) {
-            await command.delete();
-            await interaction.update({
-              embeds: [
-                new Embed().preset(
-                  this.bot,
-                  EmbedPreset.SUCCESS,
-                  `Deleted the  Command [\`${command.name}\`] successfuly!`
-                ),
-              ],
-              components: [],
-            });
-          } else throw new Error('Could not fetch a ApplicationCommand!');
-        } catch (e) {
-          await interaction.update({
+          if (button) {
+            button.execute(this, interaction);
+          } else {
+            const args = interaction.customId.split('-');
+            const prefix = args.shift();
+
+            button = this.bot.Buttons.find((b) => b.prefix === prefix);
+
+            if (button) {
+              button.execute(this, interaction, args);
+            } else {
+              interaction.reply({
+                embeds: [
+                  new Embed().preset(
+                    this.bot,
+                    EmbedPreset.ERROR,
+                    `Invalid button!`
+                  ),
+                ],
+                ephemeral: true,
+              });
+            }
+          }
+        } catch (e: Error | any) {
+          await interaction.reply({
             embeds: [
               new Embed().preset(
                 this.bot,
                 EmbedPreset.ERROR,
-                'Could not fetch a ApplicationCommand!'
+                'There was an error during the command execution!'
               ),
             ],
-            components: [],
+            ephemeral: true,
           });
+
+          this.bot.logger.error(
+            `There was an error during the execution of ${chalk.blueBright(
+              button?.name ?? interaction.customId
+            )}! Error: ${chalk.redBright(e.message)}`
+          );
         }
       }
       return res();
     });
   }
+
   handleCommand(interaction: CommandInteraction): Promise<void> {
     return new Promise(async (res) => {
       const command: typeof Command | undefined = this.bot.Commands.find(
@@ -253,23 +264,9 @@ export class Client extends DClient {
           ],
           ephemeral: true,
         };
-        if (!this.bot.Config.owners.includes(interaction.user.id)) {
-          await interaction.reply(errorReply);
-        } else {
-          Object.assign(errorReply, {
-            components: [
-              new MessageActionRow().addComponents(
-                new MessageButton()
-                  .setEmoji('🗑')
-                  .setLabel('Delete Command')
-                  .setStyle('DANGER')
-                  .setCustomId(`delete-${interaction.commandId}`)
-              ),
-            ],
-          });
 
-          await interaction.reply(errorReply);
-        }
+        await interaction.reply(errorReply);
+
         return res();
       }
       const allowedGuilds = command.getGuilds();
