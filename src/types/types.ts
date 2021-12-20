@@ -33,6 +33,7 @@ export enum EmbedPreset {
 export interface BotOptions {
   commandsPath?: string;
   eventsPath?: string;
+  buttonsPath?: string;
   config: BotConfig;
   database: SqlDatabase | JsonDatabase;
   emojis: ClientEmojis;
@@ -96,3 +97,14 @@ export interface ClientColors {
 export type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
 };
+
+export enum FileLoaderType {
+  'COMMAND' = 1,
+  'EVENT',
+  'BUTTON',
+}
+
+export interface LoadingStats {
+  success: number;
+  error: number;
+}
