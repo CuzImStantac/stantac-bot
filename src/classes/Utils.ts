@@ -12,9 +12,9 @@ export class Utils {
     return createHash('sha256').update(Buffer.from(text)).digest('hex');
   }
 
-  hashBotName(): string | null {
-    return this.bot.client?.user?.username
-      ? this.hash(this.bot.client?.user?.username)
-      : null;
+  generateHexString(length: number): string {
+    return [...Array(length)]
+      .map(() => Math.floor(Math.random() * 16).toString(16))
+      .join('');
   }
 }
