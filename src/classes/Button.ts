@@ -7,7 +7,7 @@ export abstract class Button {
 
   static button(options?: Record<string, unknown>): MessageButton {
     return new MessageButton()
-      .setLabel("This button doesn't have a label!")
+      .setLabel("Label unset!")
       .setStyle('PRIMARY')
       .setCustomId(
         [...Array(32)]
@@ -23,7 +23,7 @@ export abstract class Button {
   ) {
     interaction.reply({
       ephemeral: true,
-      content: `${client.bot.Emojis.error} | This button doesn't have a execute function!`,
+      content: `${client.bot.Emojis.error} | This button doesn't have an execute function!`,
     });
   }
 }
