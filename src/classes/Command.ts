@@ -26,8 +26,9 @@ export abstract class Command {
     };
   }
   static execute(client: Client, interaction: CommandInteraction) {
-    interaction.reply(
-      `${client.bot.Emojis.error} | This command doesn't have a execute function!`
-    );
+    interaction.reply({
+      ephemeral: true,
+      content: `${client.bot.Emojis.error} | This command doesn't have an execute function!`,
+    });
   }
 }
