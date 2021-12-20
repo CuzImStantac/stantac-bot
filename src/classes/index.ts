@@ -9,3 +9,6 @@ export * from './Logger';
 export * from './Tool';
 export * from './Utils';
 export * from './Embed';
+export * from './FileLoader';
+export * from './Button';
+export * from './ActivityManager';
