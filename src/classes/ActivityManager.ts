@@ -2,7 +2,7 @@ import { Invite, VoiceChannel } from 'discord.js';
 
 export class ActivityManager {
   constructor() {}
-  static all(): Record<string, string> {
+  static all() {
     return {
       YouTube: '880218394199220334',
       'YouTube Dev': '880218832743055411',
@@ -19,7 +19,7 @@ export class ActivityManager {
       Checkers: '832013003968348200',
       Puttparty: '763133495793942528',
       //Sketchyartist: '879864070101172255',
-    };
+    } as const;
   }
   getTypes(): string[] {
     return Object.keys(ActivityManager.all());
