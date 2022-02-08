@@ -75,6 +75,6 @@ typings/
 # FuseBox cache
 .fusebox/
 
-build
+lib
 data/**/*.json
 *.ignore
