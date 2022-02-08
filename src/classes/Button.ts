@@ -7,7 +7,7 @@ export abstract class Button {
 
   static button(options?: Record<string, unknown>): MessageButton {
     return new MessageButton()
-      .setLabel("Label unset!")
+      .setLabel('Label unset!')
       .setStyle('PRIMARY')
       .setCustomId(
         [...Array(32)]
@@ -19,7 +19,7 @@ export abstract class Button {
   static execute(
     client: Client,
     interaction: ButtonInteraction,
-    args?: string[]
+    ...args: string[]
   ) {
     interaction.reply({
       ephemeral: true,
