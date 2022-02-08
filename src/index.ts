@@ -8,3 +8,5 @@ export {
   Embed,
   Client,
 } from './classes';
+
+export * from './types';
