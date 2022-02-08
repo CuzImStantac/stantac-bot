@@ -32,7 +32,7 @@ export default class Activity extends Command {
   static guild = ['656027905414922253', '900504645582082079'];
   static description = 'Create a Voice Channel activity';
 
-  static execute(client: Client, interaction: CommandInteraction): void {
+  static async execute(client: Client, interaction: CommandInteraction): Promise<void> {
     if (
       !interaction.guild?.me
         ?.permissionsIn(interaction.options.getChannel('channel')!.id)

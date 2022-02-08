@@ -7,7 +7,7 @@ export default class Ping extends Command {
   static guild = '656027905414922253';
   static description = 'Returns the connection speed to the WebSocket.';
 
-  static execute(client: Client, interaction: CommandInteraction): void {
+  static async execute(client: Client, interaction: CommandInteraction): Promise<void> {
     interaction.reply(`Pong! \`${client.ws.ping}ms\``);
   }
 }
