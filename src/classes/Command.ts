@@ -1,5 +1,10 @@
-import { ApplicationCommandData, CommandInteraction } from 'discord.js';
-import { Client } from '.';
+import {
+  ApplicationCommandData,
+  ApplicationCommandOptionChoice,
+  AutocompleteInteraction,
+  CommandInteraction,
+} from 'discord.js';
+import { Bot, Client } from '.';
 import { CommandOptions } from '../types';
 
 export abstract class Command {
@@ -25,10 +30,23 @@ export abstract class Command {
       defaultPermission: this.defaultPermissions ?? true,
     };
   }
-  static execute(client: Client, interaction: CommandInteraction) {
+  static async execute(
+    client: Client,
+    interaction: CommandInteraction
+  ): Promise<void> {
     interaction.reply({
       ephemeral: true,
       content: `${client.bot.Emojis.error} | This command doesn't have an execute function!`,
     });
+  }
+
+  static async autocomplete(
+    client: Client,
+    interaction: AutocompleteInteraction,
+    option: string,
+    value: string | number | ApplicationCommandOptionChoice
+  ): Promise<void> {
+    interaction.respond([]);
+    return;
   }
 }
