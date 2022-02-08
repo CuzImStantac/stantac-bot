@@ -3,6 +3,7 @@ import chalk from 'chalk';
 
 export class Logger {
   readonly bot: Bot;
+  
   constructor(bot: Bot) {
     this.bot = bot;
   }
