@@ -13,7 +13,7 @@ export class JsonDatabase extends Database {
 
     const { dirPath } = options;
 
-    this.path = path.join(__dirname, '..', '..', dirPath);
+    this.path = path.join(process.cwd(), dirPath);
 
     this.read();
   }
@@ -31,7 +31,7 @@ export class JsonDatabase extends Database {
   write(): boolean {
     for (let [dataPath, data] of Object.entries(this.cache)) {
       const filePath = path.join(this.path, `${dataPath}.json`);
-      writeFileSync(filePath, JSON.stringify(data));
+      writeFileSync(filePath, JSON.stringify(data, null, 3));
     }
     readdirSync(this.path)
       .filter((f) => f.endsWith('.json'))
@@ -50,7 +50,9 @@ export class JsonDatabase extends Database {
       .filter((f) => f.endsWith('.json'))
       .forEach((file: string) => {
         const filePath = path.join(this.path, file);
-        const data = JSON.parse(readFileSync(filePath, 'utf-8').toString());
+        const data = JSON.parse(
+          readFileSync(filePath, 'utf-8').toString() || '{}'
+        );
         this.cache[file.split('.')[0] as string] = data;
       });
     return true;
