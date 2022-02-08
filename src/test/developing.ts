@@ -1,6 +1,5 @@
 import { Bot, JsonDatabase } from '../classes';
-import { config } from 'dotenv';
-config();
+import 'dotenv/config';
 const db = new JsonDatabase({ dirPath: 'data' });
 
 new Bot({
@@ -10,7 +9,9 @@ new Bot({
   config: {
     token: process.env['TOKEN']!,
     owners: ['467414935530504192'],
-    debug: true,
+    debug: process.argv.some((arg) =>
+      ['--debug', '-d'].includes(arg.toLowerCase())
+    ),
   },
   database: db,
   colors: {

@@ -95,9 +95,9 @@ export class Bot {
 
     this.client = new Client(this, {
       intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_MEMBERS,
+        Intents.FLAGS['GUILDS'],
+        Intents.FLAGS['GUILD_MESSAGES'],
+        Intents.FLAGS['GUILD_MEMBERS'],
       ],
     });
 

@@ -1,10 +1,9 @@
 import {
-  Snowflake,
-  ClientEvents,
   ApplicationCommandOptionData,
   ColorResolvable,
   EmojiResolvable,
 } from 'discord.js';
+import { Snowflake } from 'discord-api-types/v9';
 import { SqlDatabase, JsonDatabase, Bot } from '../classes';
 
 export interface BotConfig {
