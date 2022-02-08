@@ -6,6 +6,8 @@ import chalk from 'chalk';
 import { Collection } from 'discord.js';
 
 export class FileLoader {
+  static TYPES = FileLoaderType;
+  
   bot: Bot;
   type: FileLoaderType;
   filePath: string;
@@ -22,15 +24,12 @@ export class FileLoader {
       success: 0,
     };
     return new Promise(async (resolve) => {
-      if (!existsSync(path.join(__dirname, '..', '..', this.filePath)))
+      if (!existsSync(path.join(process.cwd(), this.filePath)))
         return resolve(output);
 
-      for (const file of readdirSync(
-        path.join(__dirname, '..', '..', this.filePath),
-        {
-          withFileTypes: true,
-        }
-      )) {
+      for (const file of readdirSync(path.join(process.cwd(), this.filePath), {
+        withFileTypes: true,
+      })) {
         if (file.isDirectory()) {
           const { success, error } = await new FileLoader(
             this.bot,
@@ -43,9 +42,7 @@ export class FileLoader {
         } else {
           if (!file.name.endsWith('.js')) continue;
           const classFile: typeof Event | typeof Command | typeof Button = (
-            await import(
-              path.join(__dirname, '..', '..', this.filePath, file.name)
-            )
+            await import(path.join(process.cwd(), this.filePath, file.name))
           )?.default;
 
           if (!classFile) {
