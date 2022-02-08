@@ -62,19 +62,12 @@ export interface JsonDatabaseOptions {
 
 export type CommandOptions = ApplicationCommandOptionData;
 
-export interface EventOptions {
-  name: string;
-  type: EventType;
-  emitter?: string | keyof ClientEvents;
-  timeout?: number;
-  interval?: number;
-  execute: (bot: Bot, ...args: any[]) => void;
-}
 export enum EventType {
   'PROCESS' = 1,
   'DISCORD',
   'INTERVAL',
   'TIMEOUT',
+  'CRON',
 }
 
 export interface ClientEmojis {
