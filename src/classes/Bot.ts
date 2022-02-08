@@ -38,7 +38,7 @@ export class Bot {
   readonly client: Client;
   readonly logger = new Logger(this);
   public readonly database: SqlDatabase | JsonDatabase;
-  public cache = {};
+  public readonly cache = {};
   readonly utils = new Utils(this);
   readonly Emojis: ClientEmojis;
   readonly Colors: ClientColors;
@@ -91,10 +91,14 @@ export class Bot {
       )} as Database.`
     );
 
-    if (this.database instanceof JsonDatabase) this.database.log(this);
+    if (this.database.isJsonDatabase()) this.database.log(this);
 
     this.client = new Client(this, {
-      intents: [Intents.FLAGS.GUILDS],
+      intents: [
+        Intents.FLAGS.GUILDS,
+        Intents.FLAGS.GUILD_MESSAGES,
+        Intents.FLAGS.GUILD_MEMBERS,
+      ],
     });
 
     if (commandsPath) {
