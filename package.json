@@ -17,7 +17,7 @@
   "author": "CuzImStantac",
   "license": "ISC",
   "dependencies": {
-    "chalk": "4.1.2",
+    "chalk": "5.0.0",
     "discord.js": "^13.6.0",
     "mysql": "^2.18.1",
     "node-cron": "^3.0.0"
