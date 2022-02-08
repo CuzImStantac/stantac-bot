@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import {
+  AutocompleteInteraction,
   ButtonInteraction,
   Client as DClient,
   ClientOptions,
@@ -26,9 +27,17 @@ export class Client extends DClient {
     });
 
     this.on('interactionCreate', (interaction: Interaction) => {
+      this.bot.logger.debug(
+        `Interaction ${chalk.grey('[')}${chalk.green(
+          interaction.id
+        )}${chalk.grey(']')} received!`
+      );
+
       try {
         if (interaction.isCommand()) return this.handleCommand(interaction);
         if (interaction.isButton()) return this.handleButton(interaction);
+        if (interaction.isAutocomplete())
+          return this.handleAutocomplete(interaction);
       } catch (e: Error | any) {
         this.bot.logger.error(
           `There was an error during the Interaction Processing! Error: ${chalk.redBright(
@@ -194,6 +203,25 @@ export class Client extends DClient {
     });
   }
 
+  handleAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
+    return new Promise(async (res) => {
+      try {
+        await this.bot.Commands.find(
+          (c) => c.name.toLowerCase() === interaction.commandName
+        )?.autocomplete(
+          this,
+          interaction,
+          interaction.options.getFocused(true).name,
+          interaction.options.getFocused()
+        );
+      } catch (e) {
+        if (e) interaction.respond([]);
+      }
+
+      res();
+    });
+  }
+
   handleButton(interaction: ButtonInteraction): Promise<void> {
     return new Promise(async (res) => {
       if (interaction.customId) {
@@ -211,7 +239,7 @@ export class Client extends DClient {
             button = this.bot.Buttons.find((b) => b.prefix === prefix);
 
             if (button) {
-              button.execute(this, interaction, args);
+              button.execute(this, interaction, ...args);
             } else {
               interaction.reply({
                 embeds: [
@@ -254,7 +282,7 @@ export class Client extends DClient {
         (c) => c.name.toLowerCase() === interaction.commandName
       );
       if (!command) {
-        const errorReply = {
+        await interaction.reply({
           embeds: [
             new Embed().preset(
               this.bot,
@@ -263,16 +291,14 @@ export class Client extends DClient {
             ),
           ],
           ephemeral: true,
-        };
-
-        await interaction.reply(errorReply);
+        });
 
         return res();
       }
       const allowedGuilds = command.getGuilds();
       if (
         allowedGuilds.length > 0 &&
-        !allowedGuilds.includes(interaction.guildId)
+        !allowedGuilds.includes(interaction.guildId ?? '')
       ) {
         await interaction.reply({
           embeds: [
@@ -285,24 +311,26 @@ export class Client extends DClient {
           ephemeral: true,
         });
 
-        try {
-          await this.application?.commands.delete(
-            interaction.commandId,
-            interaction.guildId
-          );
-          this.bot.logger.success(
-            `Deleted ${chalk.blueBright(command.name)} from ${chalk.redBright(
+        if (interaction.guildId) {
+          try {
+            await this.application?.commands.delete(
+              interaction.commandId,
               interaction.guildId
-            )}. (${chalk.grey('Guild only Command')})`
-          );
-        } catch (e) {
-          this.bot.logger.error(
-            `Unable to delete ${chalk.blueBright(
-              command.name
-            )} from ${chalk.redBright(interaction.guildId)}! (${chalk.grey(
-              'Guild only Command'
-            )})`
-          );
+            );
+            this.bot.logger.success(
+              `Deleted ${chalk.blueBright(command.name)} from ${chalk.redBright(
+                interaction.guildId
+              )}. (${chalk.grey('Guild only Command')})`
+            );
+          } catch (e) {
+            this.bot.logger.error(
+              `Unable to delete ${chalk.blueBright(
+                command.name
+              )} from ${chalk.redBright(interaction.guildId)}! (${chalk.grey(
+                'Guild only Command'
+              )})`
+            );
+          }
         }
         return res();
       }
