@@ -3,6 +3,8 @@ import { Bot } from '.';
 import { EmbedPreset } from '../types';
 
 export class Embed extends MessageEmbed {
+  static PRESETS = EmbedPreset;
+
   preset(bot: Bot, type: EmbedPreset, text: string): Embed {
     switch (type) {
       case EmbedPreset.DEFAULT:
@@ -31,6 +33,7 @@ export class Embed extends MessageEmbed {
       default:
         throw new Error('Invalid Embed Preset');
     }
+    
     return this;
   }
 }
