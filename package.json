@@ -20,7 +20,7 @@
     "chalk": "5.0.1",
     "discord.js": "^13.7.0",
     "mysql": "^2.18.1",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.1"
   },
   "devDependencies": {
     "@types/mysql": "^2.15.21",
